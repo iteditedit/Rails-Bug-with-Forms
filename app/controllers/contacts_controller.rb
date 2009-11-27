@@ -44,19 +44,10 @@ class ContactsController < ApplicationController
 
     respond_to do |format|
       if @contact.save
-      begin
-        # STUBED OUT MAILER 
-        flash.now[:message] = { :title => 'Thank you', :msg => 'We will get back to you promptly.' }
-      rescue
-        flash.now[:message][:errors] = { :title => 'Message not sent', :msg => 'An error prevented your message from being sent. Please email <a href="mailto:' +
-                                                                                ADMIN_EMAIL + '">' + ADMIN_EMAIL + '</a>.' }
-      end
-        format.html { redirect_to :contact }
-        format.xml { render :xml => @contact, :status => :created, :location => @contact }
+        flash[:notice] = 'Contact was successfully created.'
+        format.html { redirect_to(@contact) }
+        format.xml { head :ok }
       else
-        flash.now[:message] = { :title => 'Invalid form', :msg => 'The following errors prevented the form from being sent:' }
-        flash.now[:message][:errors] = @contact.errors.full_messages
-
         format.html { render :action => 'new' }
         format.xml { render :xml => @contact.errors, :status => :unprocessable_entity }
       end
